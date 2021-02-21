@@ -1,0 +1,96 @@
+<idea-plugin>
+    <!-- Unique id for this plugin. Must stay constant for the life of the plugin. -->
+    <id>com.janison.bundler.jetbrains</id>
+
+    <!-- Text to display as name on Preferences/Settings | Plugin page -->
+    <name>Janison Bundler</name>
+
+    <!-- Indicate this plugin can be loaded in all IntelliJ Platform-based products. -->
+    <depends>com.intellij.modules.all</depends>
+
+    <!-- Text to display as description on Preferences/Settings | Plugin page -->
+    <description>
+        <![CDATA[
+      This plugin is used by Janison Solutions as part of our build process.<br>
+      This is not for public use, and wont work without prerequisite tools installed.
+    ]]>
+    </description>
+    <change-notes>
+        <![CDATA[
+      <ul>
+        <li><b>0.0.1</b> Initial Commit of the plugin.</li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- Text to display as company information on Preferences/Settings | Plugin page -->
+    <vendor url="https://janison.com">Janison</vendor>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <projectService serviceInterface="com.janison.bundler.jetbrains.settings.BundlerSettingsPersistent"
+                        serviceImplementation="com.janison.bundler.jetbrains.settings.BundlerSettingsPersistent" />
+
+        <projectConfigurable instance="com.janison.bundler.jetbrains.settings.BundlerSettingsPage" />
+
+        <toolWindow id="bundler"
+                    icon="/images/bundler.svg"
+                    canCloseContents="false"
+                    anchor="bottom"
+                    factoryClass="com.janison.bundler.jetbrains.ui.BundlerToolWindowFactory" />
+    </extensions>
+
+    <actions>
+        <!-- groups -->
+        <group id="Bundler.BundlerMenu"
+               text="Bundler">
+            <separator/>
+        </group>
+
+        <!-- actions -->
+        <action id="com.janison.bundler.jetbrains.actions.BundlerBuildAction"
+                class="com.janison.bundler.jetbrains.actions.BundlerBuildAction"
+                text="Build"
+                description="Builds Bundler in non-release mode">
+          <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+          <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
+        </action>
+        <action id="com.janison.bundler.jetbrains.actions.BundlerBuildReleaseAction"
+                class="com.janison.bundler.jetbrains.actions.BundlerBuildReleaseAction"
+                text="Build Release"
+                description="Cleans out the bundler directory">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
+        </action>
+        <action id="com.janison.bundler.jetbrains.actions.BundlerCleanAction"
+                class="com.janison.bundler.jetbrains.actions.BundlerCleanAction"
+                text="Clean"
+                description="Cleans out the bundler directory">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
+        </action>
+    </actions>
+
+    <project-components>
+        <component>
+            <implementation-class>com.janison.bundler.jetbrains.execution.BundlerRunner</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.janison.bundler.jetbrains.execution.BundlerExecutor</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.janison.bundler.jetbrains.settings.ProjectSettings</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.janison.bundler.jetbrains.ui.BundlerConsoleView</implementation-class>
+        </component>
+      <component>
+        <implementation-class>com.janison.bundler.jetbrains.utils.BundlerLogPrinter</implementation-class>
+      </component>
+    </project-components>
+  <application-components>
+    <component>
+      <implementation-class>com.janison.bundler.jetbrains.BundlerMenu</implementation-class>
+    </component>
+  </application-components>
+</idea-plugin>
