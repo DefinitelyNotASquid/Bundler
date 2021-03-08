@@ -80,12 +80,13 @@ public class BundlerRunner implements ProjectComponent {
 
     final GeneralCommandLine commandLine = new GeneralCommandLine();
 
-    commandLine.setWorkDirectory("C:\\CLS\\ICAS\\bundler");
-    commandLine.setExePath("C:\\CLS\\ICAS\\bundler\\node.exe");
-    commandLine.addParameter("bundler.js");
+    //need to set the working directory to the super folder of the node installation for bundler
+    commandLine.setWorkDirectory(executable.replace("\\node.exe", ""));
+
 
     switch (command){
       case "build":{
+        commandLine.addParameter("bundler.js");
         commandLine.addParameter("#devBuild");
         commandLine.addParameter("#dataviz");
         commandLine.addParameter("#bundlelint");
@@ -94,12 +95,31 @@ public class BundlerRunner implements ProjectComponent {
         commandLine.addParameter("../");
         break;
       }
+      case "build-release":{
+        commandLine.addParameter("bundler.js");
+        commandLine.addParameter("#releaseBuild");
+        commandLine.addParameter("#dataviz");
+        commandLine.addParameter("#output:../output/bundler");
+        commandLine.addParameter("#bootstrappers:../Bootstrappers/Mocha.Bootstrapper");
+        commandLine.addParameter("../");
+      }
       case "clean":{
+        commandLine.addParameter("bundler.js");
         commandLine.addParameter("#clean");
         commandLine.addParameter("#output:../output/bundler");
         commandLine.addParameter("#bootstrappers:all");
         commandLine.addParameter("../");
         break;
+      }
+      case "test":{
+        commandLine.addParameter("bundler.js");
+        commandLine.addParameter("#clean");
+        commandLine.addParameter("#releaseBuild");
+        commandLine.addParameter("#dataviz");
+        commandLine.addParameter("#test");
+        commandLine.addParameter("#output:../output/bundler");
+        commandLine.addParameter("#bootstrappers:../Bootstrappers/Mocha.Bootstrapper");
+        commandLine.addParameter("../");
       }
       default:
         break;

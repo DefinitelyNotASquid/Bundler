@@ -6,11 +6,17 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.janison.bundler.jetbrains.execution.BundlerExecutionTask;
 import com.janison.bundler.jetbrains.execution.BundlerExecutor;
+import com.janison.bundler.jetbrains.infocollectors.SystemMetrics;
+import com.janison.bundler.jetbrains.insightstelemetry.AzureTelemtryClient;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BundlerBuildReleaseAction extends AnAction {
 
   private static final Logger LOGGER = Logger.getInstance(BundlerBuildReleaseAction.class);
+  private static AzureTelemtryClient atc = new AzureTelemtryClient();
 
   @Override
   public void update(@NotNull AnActionEvent e) {
@@ -27,6 +33,15 @@ public class BundlerBuildReleaseAction extends AnAction {
 
     final BundlerExecutor executor = project.getComponent(BundlerExecutor.class);
     final BundlerExecutionTask bundlerExecutionTask = new BundlerExecutionTask(project);
+
+    AzureTelemtryClient az = new AzureTelemtryClient();
+    SystemMetrics sm = new SystemMetrics();
+
+    Map<String,String> extras = new HashMap<>();
+
+    extras.put("name", project.getProjectFile().getName());
+
+    az.telemetryClient.trackEvent("Build-Release:Solution", sm.getEnvProperties(extras), sm.getMetrics());
 
     executor.saveAllDocumentsAndRunTask(bundlerExecutionTask, "build-release");
   }

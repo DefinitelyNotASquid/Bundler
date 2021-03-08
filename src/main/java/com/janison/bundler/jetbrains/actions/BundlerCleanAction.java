@@ -6,7 +6,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.janison.bundler.jetbrains.infocollectors.SystemMetrics;
+import com.janison.bundler.jetbrains.insightstelemetry.AzureTelemtryClient;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BundlerCleanAction extends AnAction {
 
@@ -27,6 +32,15 @@ public class BundlerCleanAction extends AnAction {
 
     final BundlerExecutor executor = project.getComponent(BundlerExecutor.class);
     final BundlerExecutionTask bundlerExecutionTask = new BundlerExecutionTask(project);
+
+    AzureTelemtryClient az = new AzureTelemtryClient();
+    SystemMetrics sm = new SystemMetrics();
+
+    Map<String,String> extras = new HashMap<>();
+
+    extras.put("name", project.getProjectFile().getName());
+
+    az.telemetryClient.trackEvent("Clean:Solution", sm.getEnvProperties(extras), sm.getMetrics());
 
     executor.saveAllDocumentsAndRunTask(bundlerExecutionTask, "clean");
   }

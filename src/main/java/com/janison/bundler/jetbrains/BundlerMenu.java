@@ -10,11 +10,9 @@ public class BundlerMenu implements ApplicationComponent {
   @Override
   public void initComponent() {
     final ActionManager actionManager = ActionManager.getInstance();
-    final DefaultActionGroup analyzeMenu = (DefaultActionGroup) actionManager
+    final DefaultActionGroup mainMenu = (DefaultActionGroup) actionManager
         .getAction("MainMenu");
-    if (analyzeMenu != null) {
-      final AnAction action = actionManager.getAction("Bundler.BundlerMenu");
-      analyzeMenu.add(action);
-    }
+    final AnAction action = actionManager.getAction("Bundler.BundlerMenu");
+    mainMenu.add(action);
   }
 }

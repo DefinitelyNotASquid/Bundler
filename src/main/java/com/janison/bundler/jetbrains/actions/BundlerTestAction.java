@@ -1,11 +1,11 @@
 package com.janison.bundler.jetbrains.actions;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.janison.bundler.jetbrains.execution.BundlerExecutionTask;
-import com.janison.bundler.jetbrains.execution.BundlerExecutor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.janison.bundler.jetbrains.execution.BundlerExecutionTask;
+import com.janison.bundler.jetbrains.execution.BundlerExecutor;
 import com.janison.bundler.jetbrains.infocollectors.SystemMetrics;
 import com.janison.bundler.jetbrains.insightstelemetry.AzureTelemtryClient;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BundlerBuildAction extends AnAction {
+public class BundlerTestAction extends AnAction {
 
-  private static final Logger LOGGER = Logger.getInstance(BundlerBuildAction.class);
+  private static final Logger LOGGER = Logger.getInstance(BundlerTestAction.class);
 
   @Override
   public void update(@NotNull AnActionEvent e) {
@@ -40,8 +40,8 @@ public class BundlerBuildAction extends AnAction {
 
     extras.put("name", project.getProjectFile().getName());
 
-    az.telemetryClient.trackEvent("Build:Solution", sm.getEnvProperties(extras), sm.getMetrics());
+    az.telemetryClient.trackEvent("Test:Solution", sm.getEnvProperties(extras), sm.getMetrics());
 
-    executor.saveAllDocumentsAndRunTask(bundlerExecutionTask, "build");
+    executor.saveAllDocumentsAndRunTask(bundlerExecutionTask, "test");
   }
 }

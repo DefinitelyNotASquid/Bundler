@@ -28,8 +28,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <projectService serviceInterface="com.janison.bundler.jetbrains.settings.BundlerSettingsPersistent"
-                        serviceImplementation="com.janison.bundler.jetbrains.settings.BundlerSettingsPersistent" />
+        <projectService
+                serviceImplementation="com.janison.bundler.jetbrains.settings.BundlerSettingsPersistent" />
 
         <projectConfigurable instance="com.janison.bundler.jetbrains.settings.BundlerSettingsPage" />
 
@@ -39,6 +39,8 @@
                     anchor="bottom"
                     factoryClass="com.janison.bundler.jetbrains.ui.BundlerToolWindowFactory" />
     </extensions>
+
+
 
     <actions>
         <!-- groups -->
@@ -51,21 +53,35 @@
         <action id="com.janison.bundler.jetbrains.actions.BundlerBuildAction"
                 class="com.janison.bundler.jetbrains.actions.BundlerBuildAction"
                 text="Build"
-                description="Builds Bundler in non-release mode">
-          <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+                description="Builds Bundler in non-release mode for easy developer debugging. Does not run tests.">
+          <add-to-group group-id="EditorPopupMenu" anchor="first"/>
           <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
         </action>
         <action id="com.janison.bundler.jetbrains.actions.BundlerBuildReleaseAction"
                 class="com.janison.bundler.jetbrains.actions.BundlerBuildReleaseAction"
                 text="Build Release"
-                description="Cleans out the bundler directory">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+                description="Builds and Minifies front end files to emulate production release methods. Does not run tests.">
+            <add-to-group group-id="EditorPopupMenu"/>
             <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
         </action>
         <action id="com.janison.bundler.jetbrains.actions.BundlerCleanAction"
                 class="com.janison.bundler.jetbrains.actions.BundlerCleanAction"
                 text="Clean"
-                description="Cleans out the bundler directory">
+                description="Cleans out the bundler directory, removing potentially cached files.">
+            <add-to-group group-id="EditorPopupMenu" />
+            <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
+        </action>
+        <action id="com.janison.bundler.jetbrains.actions.BundlerTestAction"
+                class="com.janison.bundler.jetbrains.actions.BundlerTestAction"
+                text="Test"
+                description="Runs bundler in release with tests. This enables us to see front end coverage of the application.">
+            <add-to-group group-id="EditorPopupMenu" />
+            <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
+        </action>
+        <action id="com.janison.bundler.jetbrains.actions.BundlerRazorAction"
+                class="com.janison.bundler.jetbrains.actions.BundlerRazorAction"
+                text="Razor"
+                description="Runs Razor Generator inside the application. (WIP may not work)">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="Bundler.BundlerMenu" anchor="last"/>
         </action>
@@ -93,4 +109,14 @@
       <implementation-class>com.janison.bundler.jetbrains.BundlerMenu</implementation-class>
     </component>
   </application-components>
+    <applicationListeners>
+        <listener class="com.janison.bundler.jetbrains.services.DeleteFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        <listener class="com.janison.bundler.jetbrains.services.CreateFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        <listener class="com.janison.bundler.jetbrains.services.SaveFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        <listener class="com.janison.bundler.jetbrains.services.RenameFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </applicationListeners>
 </idea-plugin>
